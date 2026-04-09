@@ -4,495 +4,259 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>HERO Scanner – Pitch</title>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet" />
   <style>
-    :root {
-      --y: #FFD600;
-      --b: #1A1A1A;
-      --w: #FFFFFF;
-      --g: rgba(255,255,255,0.45);
-    }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    html, body { width: 100%; height: 100%; overflow: hidden; font-family: "DM Sans", sans-serif; background: var(--b); }
+    :root { --y:#FFD600; --b:#1A1A1A; --w:#FFFFFF; }
+    * { box-sizing:border-box; margin:0; padding:0; }
+    html,body { width:100%; height:100%; overflow:hidden; font-family:"DM Sans",sans-serif; background:var(--b); }
 
-    /* ── SLIDE ENGINE ── */
-    .deck { width: 100%; height: 100%; position: relative; }
+    .deck { width:100%; height:100%; position:relative; }
+
     .slide {
-      position: absolute; inset: 0;
-      display: flex; flex-direction: column;
-      justify-content: center; align-items: flex-start;
-      padding: 80px 100px;
-      opacity: 0; pointer-events: none;
-      transform: translateY(24px);
-      transition: opacity .5s ease, transform .5s ease;
+      position:absolute; inset:0;
+      display:flex; flex-direction:column;
+      justify-content:center; align-items:flex-start;
+      padding:80px 110px;
+      opacity:0; pointer-events:none;
+      transform:translateY(20px);
+      transition:opacity .45s ease, transform .45s ease;
     }
-    .slide.active { opacity: 1; pointer-events: all; transform: translateY(0); }
-    .slide.out    { opacity: 0; transform: translateY(-24px); }
-    .centered { align-items: center; text-align: center; }
+    .slide.active { opacity:1; pointer-events:all; transform:translateY(0); }
+    .slide.out    { opacity:0; transform:translateY(-20px); }
+    .center { align-items:center; text-align:center; }
 
-    /* ── BACKGROUNDS ── */
-    .dark   { background: var(--b); }
-    .yellow { background: var(--y); }
-    .white  { background: var(--w); }
+    .dark   { background:var(--b); }
+    .yellow { background:var(--y); }
 
-    /* ── FIXED CHROME ── */
+    /* ── FIXED ── */
     .logo {
-      position: fixed; top: 32px; left: 48px;
-      font-size: 16px; font-weight: 800; color: rgba(255,255,255,0.18);
-      z-index: 200; letter-spacing: -.3px;
+      position:fixed; top:32px; left:48px; z-index:200;
+      font-size:15px; font-weight:800; color:rgba(255,255,255,0.15); letter-spacing:-.3px;
     }
-    .logo span { color: rgba(255,214,0,0.35); }
-    .logo.on-light { color: rgba(26,26,26,0.2); }
-    .logo.on-light span { color: rgba(26,26,26,0.15); }
+    .logo span { color:rgba(255,214,0,0.3); }
+    .logo.light { color:rgba(26,26,26,0.18); }
+    .logo.light span { color:rgba(26,26,26,0.15); }
+
+    .hint { position:fixed; top:34px; right:48px; font-size:11px; color:rgba(255,255,255,0.18); font-weight:500; z-index:200; }
 
     .nav {
-      position: fixed; bottom: 36px; left: 50%; transform: translateX(-50%);
-      display: flex; align-items: center; gap: 14px;
-      background: rgba(255,255,255,0.06); backdrop-filter: blur(16px);
-      border: 1px solid rgba(255,255,255,0.1); border-radius: 50px;
-      padding: 10px 22px; z-index: 200;
+      position:fixed; bottom:36px; left:50%; transform:translateX(-50%);
+      display:flex; align-items:center; gap:14px;
+      background:rgba(255,255,255,0.06); backdrop-filter:blur(16px);
+      border:1px solid rgba(255,255,255,0.1); border-radius:50px;
+      padding:10px 22px; z-index:200;
+      transition: background .3s, border-color .3s;
     }
     .nav-btn {
-      width: 34px; height: 34px; border-radius: 50%; border: none;
-      background: rgba(255,255,255,0.08); color: white;
-      font-size: 15px; cursor: pointer; display: flex; align-items: center; justify-content: center;
-      transition: all .2s;
+      width:34px; height:34px; border-radius:50%; border:none;
+      background:rgba(255,255,255,0.08); color:white; font-size:15px;
+      cursor:pointer; display:flex; align-items:center; justify-content:center;
+      transition:all .2s;
     }
-    .nav-btn:hover { background: var(--y); color: var(--b); }
-    .dots { display: flex; gap: 6px; align-items: center; }
-    .dot {
-      width: 6px; height: 6px; border-radius: 3px;
-      background: rgba(255,255,255,0.2); cursor: pointer; transition: all .25s;
-    }
-    .dot.on { background: var(--y); width: 20px; }
-    .ctr { font-size: 12px; font-weight: 600; color: rgba(255,255,255,0.3); min-width: 38px; text-align: center; }
+    .nav-btn:hover { background:var(--y); color:var(--b); }
+    .dots { display:flex; gap:6px; align-items:center; }
+    .dot { width:6px; height:6px; border-radius:3px; background:rgba(255,255,255,0.2); cursor:pointer; transition:all .25s; }
+    .dot.on { background:var(--y); width:20px; }
+    .ctr { font-size:12px; font-weight:600; color:rgba(255,255,255,0.28); min-width:36px; text-align:center; }
 
-    .hint { position: fixed; top: 32px; right: 48px; font-size: 11px; color: rgba(255,255,255,0.18); font-weight: 500; z-index: 200; }
+    /* ── TYPOGRAPHY ── */
+    .label {
+      font-size:12px; font-weight:700; letter-spacing:.12em; text-transform:uppercase;
+      color:var(--y); margin-bottom:22px;
+      display:flex; align-items:center; gap:10px;
+    }
+    .label::before { content:''; width:24px; height:3px; background:var(--y); border-radius:2px; }
+    .label.dark-text { color:rgba(26,26,26,0.4); }
+    .label.dark-text::before { background:rgba(26,26,26,0.3); }
 
-    /* ── SLIDE 1: TITLE ── */
-    .s1-pre {
-      font-size: 13px; font-weight: 700; letter-spacing: .12em;
-      text-transform: uppercase; color: var(--y);
-      display: flex; align-items: center; gap: 10px;
-      margin-bottom: 28px;
+    .h1 {
+      font-size:clamp(56px,7.5vw,108px);
+      font-weight:800; color:var(--w); line-height:1.0;
+      margin-bottom:28px;
     }
-    .s1-pre::before { content:''; width: 28px; height: 3px; background: var(--y); border-radius: 2px; }
-    .s1-h {
-      font-size: clamp(54px, 6.5vw, 96px);
-      font-weight: 800; color: var(--w); line-height: 1.0;
-      margin-bottom: 28px; max-width: 800px;
-    }
-    .s1-h em { color: var(--y); font-style: normal; }
-    .s1-sub {
-      font-size: clamp(16px, 1.6vw, 20px);
-      color: var(--g); line-height: 1.7; max-width: 520px; margin-bottom: 48px;
-    }
-    .tag-row { display: flex; gap: 10px; flex-wrap: wrap; }
-    .tag {
-      background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.09);
-      color: rgba(255,255,255,0.45); font-size: 13px; font-weight: 600;
-      padding: 8px 16px; border-radius: 50px;
-    }
-    .deco {
-      position: absolute; border-radius: 50%; pointer-events: none; filter: blur(100px);
-    }
+    .h1 em { color:var(--y); font-style:normal; }
+    .h1.dark-text { color:var(--b); }
+    .h1.dark-text em { color:rgba(26,26,26,0.3); }
 
-    /* ── SLIDE 2: BIG PROBLEM STATEMENT ── */
-    .big-label {
-      font-size: 13px; font-weight: 700; letter-spacing: .1em;
-      text-transform: uppercase; color: var(--y); margin-bottom: 20px;
+    .h2 {
+      font-size:clamp(36px,5vw,72px);
+      font-weight:800; color:var(--w); line-height:1.05;
+      margin-bottom:24px;
     }
-    .big-quote {
-      font-size: clamp(28px, 3.8vw, 54px);
-      font-weight: 800; color: var(--w); line-height: 1.2;
-      max-width: 780px; margin-bottom: 36px;
-    }
-    .big-quote em { color: var(--y); font-style: normal; }
-    .big-quote .muted { color: rgba(255,255,255,0.35); }
-    .big-sub {
-      font-size: 18px; color: var(--g); line-height: 1.7; max-width: 600px;
-    }
+    .h2 em { color:var(--y); font-style:normal; }
+    .h2.dark-text { color:var(--b); }
 
-    /* ── SLIDE 3: BIG NUMBER ── */
-    .stat-num {
-      font-size: clamp(100px, 18vw, 200px);
-      font-weight: 800; color: var(--b); line-height: 1;
-      margin-bottom: 0;
+    .sub {
+      font-size:clamp(17px,1.8vw,22px);
+      color:rgba(255,255,255,0.45); line-height:1.65;
+      max-width:560px;
     }
-    .stat-unit { font-size: clamp(40px, 6vw, 72px); font-weight: 800; color: var(--b); }
-    .stat-label { font-size: clamp(18px, 2.5vw, 28px); color: rgba(26,26,26,0.55); font-weight: 600; margin-top: 12px; max-width: 480px; line-height: 1.5; }
+    .sub.dark-text { color:rgba(26,26,26,0.5); }
+    .sub strong { color:var(--w); font-weight:700; }
+    .sub.dark-text strong { color:var(--b); }
 
-    /* ── USE CASE SLIDES ── */
-    .uc-num {
-      font-size: 13px; font-weight: 700; letter-spacing: .1em;
-      text-transform: uppercase; margin-bottom: 16px;
-      display: flex; align-items: center; gap: 10px;
-    }
-    .uc-num .badge {
-      background: var(--y); color: var(--b);
-      font-size: 11px; font-weight: 800;
-      padding: 4px 12px; border-radius: 50px;
-    }
-    .uc-title {
-      font-size: clamp(40px, 5vw, 72px);
-      font-weight: 800; color: var(--w); line-height: 1.05;
-      max-width: 700px; margin-bottom: 24px;
-    }
-    .uc-title em { color: var(--y); font-style: normal; }
-    .uc-body {
-      font-size: clamp(15px, 1.5vw, 18px);
-      color: var(--g); line-height: 1.75; max-width: 580px;
-      margin-bottom: 36px;
-    }
-    .uc-body strong { color: var(--w); font-weight: 700; }
-    .uc-kicker {
-      display: inline-flex; align-items: center; gap: 10px;
-      background: rgba(255,214,0,0.1); border: 1px solid rgba(255,214,0,0.2);
-      color: var(--y); font-size: 15px; font-weight: 700;
-      padding: 12px 22px; border-radius: 50px;
-    }
-    .uc-kicker svg { width: 16px; height: 16px; }
+    /* stat */
+    .stat { font-size:clamp(110px,18vw,200px); font-weight:800; color:var(--b); line-height:1; }
+    .stat-unit { font-size:clamp(50px,8vw,96px); }
+    .stat-desc { font-size:clamp(18px,2vw,26px); color:rgba(26,26,26,0.5); font-weight:600; margin-top:14px; max-width:460px; line-height:1.5; }
 
-    /* UC right side panel */
-    .uc-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; width: 100%; }
-    .uc-panel {
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 24px; padding: 32px;
-      display: flex; flex-direction: column; gap: 14px;
+    /* points */
+    .points { display:flex; flex-direction:column; gap:14px; margin-top:36px; }
+    .point {
+      display:flex; align-items:center; gap:14px;
+      font-size:clamp(16px,1.6vw,20px); font-weight:600; color:rgba(255,255,255,0.7);
     }
-    .uc-panel-item {
-      display: flex; align-items: flex-start; gap: 14px;
-      padding: 14px 16px;
-      background: rgba(255,255,255,0.03);
-      border-radius: 14px;
-    }
-    .uc-panel-dot {
-      width: 10px; height: 10px; border-radius: 50%;
-      background: var(--y); flex-shrink: 0; margin-top: 5px;
-    }
-    .uc-panel-text { font-size: 14px; color: rgba(255,255,255,0.7); line-height: 1.55; font-weight: 500; }
-    .uc-panel-text strong { color: var(--w); }
+    .point .dot-y { width:8px; height:8px; border-radius:50%; background:var(--y); flex-shrink:0; }
+    .point.dark-text { color:rgba(26,26,26,0.65); }
+    .point.dark-text .dot-y { background:var(--b); }
 
-    /* ── DEMO SLIDE (UC2) ── */
-    .demo-link-btn {
-      display: inline-flex; align-items: center; gap: 12px;
-      background: var(--b); color: var(--y);
-      border: none; border-radius: 50px;
-      padding: 18px 36px; font-family: "DM Sans", sans-serif;
-      font-size: 17px; font-weight: 700;
-      cursor: pointer; text-decoration: none;
-      box-shadow: 0 8px 32px rgba(0,0,0,0.2);
-      transition: all .2s;
+    /* badge */
+    .uc-badge {
+      display:inline-flex; align-items:center; gap:8px;
+      background:var(--y); color:var(--b);
+      font-size:12px; font-weight:800; letter-spacing:.06em; text-transform:uppercase;
+      padding:6px 16px; border-radius:50px; margin-bottom:20px;
     }
-    .demo-link-btn:hover { transform: translateY(-2px); box-shadow: 0 14px 40px rgba(0,0,0,0.25); }
-    .demo-link-btn svg { width: 18px; height: 18px; }
-    .demo-sub-link {
-      font-size: 13px; color: rgba(26,26,26,0.4); margin-top: 14px; font-weight: 500;
-    }
+    .uc-badge.inv { background:var(--b); color:var(--y); }
 
-    /* ── FINAL SLIDE ── */
-    .final-line {
-      font-size: clamp(13px, 1.2vw, 15px);
-      font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
-      color: var(--g); margin-bottom: 24px;
+    /* demo btn */
+    .demo-btn {
+      display:inline-flex; align-items:center; gap:12px;
+      background:var(--b); color:var(--y);
+      border:none; border-radius:50px;
+      padding:18px 36px; font-family:"DM Sans",sans-serif;
+      font-size:17px; font-weight:700; cursor:pointer; text-decoration:none;
+      box-shadow:0 8px 32px rgba(0,0,0,0.2); transition:all .2s; margin-top:40px;
     }
-    .final-h {
-      font-size: clamp(44px, 6vw, 88px);
-      font-weight: 800; color: var(--w); line-height: 1.0;
-      margin-bottom: 24px; max-width: 800px;
+    .demo-btn:hover { transform:translateY(-2px); }
+    .demo-btn svg { width:18px; height:18px; }
+
+    /* final btns */
+    .btns { display:flex; gap:14px; margin-top:44px; }
+    .btn-y {
+      display:inline-flex; align-items:center; gap:10px;
+      background:var(--y); color:var(--b); border:none; border-radius:50px;
+      padding:18px 36px; font-family:"DM Sans",sans-serif;
+      font-size:16px; font-weight:700; cursor:pointer; text-decoration:none;
+      box-shadow:0 6px 24px rgba(255,214,0,0.3); transition:all .2s;
     }
-    .final-h em { color: var(--y); font-style: normal; }
-    .final-sub {
-      font-size: 19px; color: var(--g); line-height: 1.7;
-      max-width: 600px; margin-bottom: 48px;
-    }
-    .final-btns { display: flex; gap: 14px; flex-wrap: wrap; }
-    .btn-primary {
-      display: inline-flex; align-items: center; gap: 10px;
-      background: var(--y); color: var(--b);
-      border: none; border-radius: 50px;
-      padding: 18px 36px; font-family: "DM Sans", sans-serif;
-      font-size: 16px; font-weight: 700; cursor: pointer; text-decoration: none;
-      box-shadow: 0 6px 24px rgba(255,214,0,0.3); transition: all .2s;
-    }
-    .btn-primary:hover { transform: translateY(-2px); }
+    .btn-y:hover { transform:translateY(-2px); }
     .btn-ghost {
-      display: inline-flex; align-items: center; gap: 10px;
-      background: transparent; color: rgba(255,255,255,0.5);
-      border: 1px solid rgba(255,255,255,0.15); border-radius: 50px;
-      padding: 18px 36px; font-family: "DM Sans", sans-serif;
-      font-size: 16px; font-weight: 600; cursor: pointer; text-decoration: none;
-      transition: all .2s;
+      display:inline-flex; align-items:center; gap:10px;
+      background:transparent; color:rgba(255,255,255,0.45);
+      border:1px solid rgba(255,255,255,0.15); border-radius:50px;
+      padding:18px 36px; font-family:"DM Sans",sans-serif;
+      font-size:16px; font-weight:600; cursor:pointer; text-decoration:none; transition:all .2s;
     }
-    .btn-ghost:hover { border-color: rgba(255,255,255,0.3); color: white; }
+    .btn-ghost:hover { color:white; border-color:rgba(255,255,255,0.3); }
 
-    /* scan animation on final */
-    .scan-anim {
-      position: absolute; right: 100px; top: 50%; transform: translateY(-50%);
-      width: 260px; height: 260px;
-      display: flex; align-items: center; justify-content: center;
-    }
-    .sa-ring {
-      position: absolute; border-radius: 50%;
-      border: 1px solid rgba(255,214,0,0.15);
-      animation: expand 3s ease-out infinite;
-    }
-    @keyframes expand {
-      0%   { width: 80px; height: 80px; opacity: .8; }
-      100% { width: 260px; height: 260px; opacity: 0; }
-    }
-    .sa-ring:nth-child(2) { animation-delay: 1s; }
-    .sa-ring:nth-child(3) { animation-delay: 2s; }
-    .sa-core {
-      width: 80px; height: 80px; border-radius: 50%;
-      background: rgba(255,214,0,0.1);
-      border: 2px solid rgba(255,214,0,0.4);
-      display: flex; align-items: center; justify-content: center;
-      position: relative; z-index: 1;
-    }
-    .sa-core svg { width: 34px; height: 34px; }
+    /* scan anim */
+    .scan-anim { position:absolute; right:110px; top:50%; transform:translateY(-50%); width:260px; height:260px; display:flex; align-items:center; justify-content:center; }
+    .ring { position:absolute; border-radius:50%; border:1px solid rgba(255,214,0,0.15); animation:expand 3s ease-out infinite; }
+    @keyframes expand { 0%{width:80px;height:80px;opacity:.7} 100%{width:260px;height:260px;opacity:0} }
+    .ring:nth-child(2){animation-delay:1s} .ring:nth-child(3){animation-delay:2s}
+    .core { width:80px;height:80px;border-radius:50%;background:rgba(255,214,0,0.1);border:2px solid rgba(255,214,0,0.4);display:flex;align-items:center;justify-content:center;position:relative;z-index:1; }
+    .core svg { width:34px;height:34px; }
+
+    /* deco blob */
+    .blob { position:absolute;border-radius:50%;pointer-events:none;filter:blur(100px); }
   </style>
 </head>
 <body>
 
-<div class="logo" id="logoEl">HERO<span>.</span></div>
-<div class="hint">← → to navigate</div>
-
+<div class="logo" id="logo">HERO<span>.</span></div>
+<div class="hint">← →</div>
 <div class="deck">
 
-  <!-- ══ SLIDE 1: TITLE ══ -->
-  <div class="slide dark active" data-index="0">
-    <div class="deco" style="width:500px;height:500px;background:rgba(255,214,0,0.06);top:-150px;right:-150px;"></div>
+  <!-- 1 TITLE -->
+  <div class="slide dark active">
+    <div class="blob" style="width:500px;height:500px;background:rgba(255,214,0,0.06);top:-150px;right:-100px;"></div>
+    <div class="label">AI Hackathon 2026 · HERO Software</div>
+    <div class="h1">We don't build<br/>a feature.<br/><em>We build<br/>the future.</em></div>
+  </div>
 
-    <div class="s1-pre">AI Hackathon 2026 · HERO Software</div>
-    <div class="s1-h">We don't build<br/>a feature.<br/><em>We build the future.</em></div>
-    <div class="s1-sub">A revolution for the whole tradesmen business — powered by a 3D scanner, AI, and one iPad.</div>
-    <div class="tag-row">
-      <span class="tag">3D Scan</span>
-      <span class="tag">AI-powered</span>
-      <span class="tag">Real-time</span>
-      <span class="tag">One iPad</span>
+  <!-- 2 PROBLEM -->
+  <div class="slide dark">
+    <div class="blob" style="width:400px;height:400px;background:rgba(239,68,68,0.05);bottom:-80px;right:-80px;"></div>
+    <div class="label">The Problem</div>
+    <div class="h2">Craftsmen don't have<br/>a <em>technology</em> problem.<br/>They have an<br/><span style="color:rgba(255,255,255,0.3)">information problem.</span></div>
+    <div class="sub" style="margin-top:4px;">Before any invoice — someone has to answer:<br/><strong>"What am I actually dealing with?"</strong><br/>Right now that means: drive there. Look. Drive again.</div>
+  </div>
+
+  <!-- 3 DEMO -->
+  <div class="slide yellow">
+    <div class="label dark-text">The Solution</div>
+    <div class="h1 dark-text">Point.<br/>Scan.<br/><em>Done.</em></div>
+    <a href="https://frontend-ten-pi-37.vercel.app" target="_blank" class="demo-btn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+      See it live
+    </a>
+  </div>
+
+  <!-- 4 UC1 -->
+  <div class="slide dark">
+    <div class="uc-badge">Use Case 01</div>
+    <div class="h2">Scan it.<br/><em>Quote it.</em><br/>On the spot.</div>
+    <div class="points">
+      <div class="point"><div class="dot-y"></div>Full 3D model in seconds — not a photo</div>
+      <div class="point"><div class="dot-y"></div>Materials & measurements detected automatically</div>
+      <div class="point"><div class="dot-y"></div>Quote sent before leaving the job site</div>
     </div>
   </div>
 
-  <!-- ══ SLIDE 2: THE REAL PROBLEM ══ -->
-  <div class="slide dark" data-index="1">
-    <div class="deco" style="width:400px;height:400px;background:rgba(239,68,68,0.05);bottom:-100px;right:-100px;"></div>
-
-    <div class="big-label">The Real Problem</div>
-    <div class="big-quote">
-      Craftsmen don't have a<br/>
-      <em>technology</em> problem.<br/>
-      <span class="muted">They have an</span> information problem.
-    </div>
-    <div class="big-sub">
-      Before HERO can do anything — before an invoice, before a quote — someone has to answer: <strong style="color:white">What am I actually dealing with?</strong><br/><br/>
-      Right now? Drive there. Look at it. Hope you didn't forget anything. Drive again.
+  <!-- 5 UC2 -->
+  <div class="slide yellow">
+    <div class="uc-badge inv">Use Case 02</div>
+    <div class="h2 dark-text">The craftsman<br/>never has to<br/><em>show up.</em></div>
+    <div class="points">
+      <div class="point dark-text"><div class="dot-y"></div>Send customer a link</div>
+      <div class="point dark-text"><div class="dot-y"></div>They film 30 seconds on their phone</div>
+      <div class="point dark-text"><div class="dot-y"></div>Full 3D model. Quote. Done. Zero visits.</div>
     </div>
   </div>
 
-  <!-- ══ SLIDE 3: DEMO / SOLUTION ══ -->
-  <div class="slide yellow" data-index="2">
-    <div class="solution-layout">
-      <div>
-        <div class="slide-eyebrow dark">The Solution</div>
-        <div class="uc-title" style="color:var(--b);">Point.<br/>Scan.<br/><em style="color:rgba(26,26,26,0.35);">Done.</em></div>
-        <div class="uc-body" style="color:rgba(26,26,26,0.6);">
-          HERO Scanner turns any phone or iPad into a full 3D measurement and analysis tool.<br/><br/>
-          <strong style="color:var(--b);">Materials. Dimensions. Costs. 3D Model.</strong><br/>
-          Generated in seconds — directly on-site.
-        </div>
-        <a href="https://frontend-ten-pi-37.vercel.app" target="_blank" class="demo-link-btn">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" width="18"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-          See it live
-        </a>
-        <div class="demo-sub-link">frontend-ten-pi-37.vercel.app</div>
-      </div>
-      <div style="display:flex;flex-direction:column;gap:14px;">
-        <div class="uc-panel" style="background:rgba(0,0,0,0.07);border-color:rgba(0,0,0,0.08);">
-          <div class="uc-panel-item" style="background:rgba(0,0,0,0.04);">
-            <div class="uc-panel-dot" style="background:var(--b);"></div>
-            <div class="uc-panel-text" style="color:rgba(26,26,26,0.7);"><strong style="color:var(--b);">Scan or upload video</strong><br/>Live camera or 30-sec phone footage</div>
-          </div>
-          <div class="uc-panel-item" style="background:rgba(0,0,0,0.04);">
-            <div class="uc-panel-dot" style="background:var(--b);"></div>
-            <div class="uc-panel-text" style="color:rgba(26,26,26,0.7);"><strong style="color:var(--b);">AI analyses in seconds</strong><br/>3D reconstruction, material + cost detection</div>
-          </div>
-          <div class="uc-panel-item" style="background:rgba(0,0,0,0.04);">
-            <div class="uc-panel-dot" style="background:var(--b);"></div>
-            <div class="uc-panel-text" style="color:rgba(26,26,26,0.7);"><strong style="color:var(--b);">Full report ready</strong><br/>Materials list, costs, dimensions, 3D model</div>
-          </div>
-          <div class="uc-panel-item" style="background:rgba(0,0,0,0.04);">
-            <div class="uc-panel-dot" style="background:var(--b);"></div>
-            <div class="uc-panel-text" style="color:rgba(26,26,26,0.7);"><strong style="color:var(--b);">One tap to order</strong><br/>Directly into the HERO workflow</div>
-          </div>
-        </div>
-      </div>
+  <!-- 6 UC3 -->
+  <div class="slide dark">
+    <div class="uc-badge">Use Case 03</div>
+    <div class="h2">The job's not done<br/>when you say so.<br/><em>The scan confirms it.</em></div>
+    <div class="points">
+      <div class="point"><div class="dot-y"></div>Scan before & after — pixel-by-pixel proof</div>
+      <div class="point"><div class="dot-y"></div>Customer sign-offs. Insurance. Quality control.</div>
+      <div class="point"><div class="dot-y"></div>Tied directly to the invoice in HERO</div>
     </div>
   </div>
 
-  <!-- ══ SLIDE 4: USE CASE 1 ══ -->
-  <div class="slide dark" data-index="3">
-    <div class="uc-layout">
-      <div>
-        <div class="uc-num">
-          <span class="badge">Use Case 01</span>
-          <span style="color:var(--g);font-size:13px;font-weight:600;">The Craftsman</span>
-        </div>
-        <div class="uc-title">Scan it.<br/><em>Quote it.</em><br/>On the spot.</div>
-        <div class="uc-body">
-          The craftsman arrives on-site, opens the iPad and scans the component in seconds.<br/><br/>
-          What he gets is <strong>not a photo</strong>. It's a full 3D model — measurable, walkable, documented.<br/><br/>
-          He selects the damage zone, taps a material, speaks a quote. Done.
-        </div>
-        <div class="uc-kicker">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
-          No going back. No second trip.
-        </div>
-      </div>
-      <div class="uc-panel">
-        <div class="uc-panel-item">
-          <div class="uc-panel-dot"></div>
-          <div class="uc-panel-text"><strong>Open iPad → Scan</strong><br/>Full 3D model in seconds</div>
-        </div>
-        <div class="uc-panel-item">
-          <div class="uc-panel-dot"></div>
-          <div class="uc-panel-text"><strong>Tap any surface</strong><br/>Materials detected automatically</div>
-        </div>
-        <div class="uc-panel-item">
-          <div class="uc-panel-dot"></div>
-          <div class="uc-panel-text"><strong>Exact measurements</strong><br/>±1.2mm — no tape needed</div>
-        </div>
-        <div class="uc-panel-item">
-          <div class="uc-panel-dot"></div>
-          <div class="uc-panel-text"><strong>Quote sent</strong><br/>Before leaving the job site</div>
-        </div>
-      </div>
-    </div>
+  <!-- 7 10,000+ -->
+  <div class="slide yellow center">
+    <div class="stat">10,000<span class="stat-unit">+</span></div>
+    <div class="stat-desc">use cases unlocked by one 3D model.<br/>This is just the beginning.</div>
   </div>
 
-  <!-- ══ SLIDE 5: USE CASE 2 ══ -->
-  <div class="slide yellow" data-index="4">
-    <div class="uc-layout">
-      <div>
-        <div class="uc-num" style="color:var(--b);">
-          <span class="badge" style="background:var(--b);color:var(--y);">Use Case 02</span>
-          <span style="color:rgba(26,26,26,0.5);font-size:13px;font-weight:600;">The Customer</span>
-        </div>
-        <div class="uc-title" style="color:var(--b);">The craftsman<br/>never has to<br/><em style="color:rgba(26,26,26,0.4)">show up.</em></div>
-        <div class="uc-body" style="color:rgba(26,26,26,0.6);">
-          He sends the customer a link. The customer films a 30-second walkthrough on their phone.<br/><br/>
-          From that video: <strong style="color:var(--b)">full 3D model. Materials. Cost estimate.</strong><br/><br/>
-          Zero visits. Zero driving. Full understanding.
-        </div>
-        <div class="uc-kicker" style="background:rgba(0,0,0,0.08);border-color:rgba(0,0,0,0.12);color:var(--b);">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" width="16"><polyline points="20 6 9 17 4 12"/></svg>
-          Zero visits. Zero driving. Full understanding.
-        </div>
-      </div>
-      <div style="display:flex;flex-direction:column;gap:16px;">
-        <div class="uc-panel" style="background:rgba(0,0,0,0.07);border-color:rgba(0,0,0,0.08);">
-          <div style="font-size:13px;font-weight:700;color:rgba(26,26,26,0.5);letter-spacing:.06em;text-transform:uppercase;margin-bottom:4px;">How it works</div>
-          <div class="uc-panel-item" style="background:rgba(0,0,0,0.04);">
-            <div class="uc-panel-dot" style="background:var(--b);"></div>
-            <div class="uc-panel-text" style="color:rgba(26,26,26,0.7);"><strong style="color:var(--b);">1. Send link</strong><br/>Personalised email to the customer</div>
-          </div>
-          <div class="uc-panel-item" style="background:rgba(0,0,0,0.04);">
-            <div class="uc-panel-dot" style="background:var(--b);"></div>
-            <div class="uc-panel-text" style="color:rgba(26,26,26,0.7);"><strong style="color:var(--b);">2. Customer films</strong><br/>30-second phone video — nothing special</div>
-          </div>
-          <div class="uc-panel-item" style="background:rgba(0,0,0,0.04);">
-            <div class="uc-panel-dot" style="background:var(--b);"></div>
-            <div class="uc-panel-text" style="color:rgba(26,26,26,0.7);"><strong style="color:var(--b);">3. AI generates model</strong><br/>3D scan, materials, costs — automated</div>
-          </div>
-          <div class="uc-panel-item" style="background:rgba(0,0,0,0.04);">
-            <div class="uc-panel-dot" style="background:var(--b);"></div>
-            <div class="uc-panel-text" style="color:rgba(26,26,26,0.7);"><strong style="color:var(--b);">4. Quote sent</strong><br/>Without leaving the office</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ══ SLIDE 6: USE CASE 3 — VALIDATION ══ -->
-  <div class="slide dark" data-index="5">
-    <div class="uc-layout">
-      <div>
-        <div class="uc-num">
-          <span class="badge">Use Case 03</span>
-          <span style="color:var(--g);font-size:13px;font-weight:600;">Validation</span>
-        </div>
-        <div class="uc-title">The job's not done<br/>when you say so.<br/><em>The scan confirms it.</em></div>
-        <div class="uc-body">
-          After the job — scan again. Same area. Same 3D model.<br/><br/>
-          <strong>Is the crack gone? Do measurements match? Does the repair match the quote?</strong><br/><br/>
-          Pixel-by-pixel proof. Documented. Validated. Perfect for sign-offs and insurance.
-        </div>
-        <div class="uc-kicker">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-          This is PROOF. Actual, pixel-by-pixel proof.
-        </div>
-      </div>
-      <div class="uc-panel">
-        <div style="font-size:12px;font-weight:700;color:rgba(255,255,255,0.3);letter-spacing:.07em;text-transform:uppercase;margin-bottom:8px;">Before → After</div>
-        <div class="uc-panel-item">
-          <div class="uc-panel-dot"></div>
-          <div class="uc-panel-text"><strong>Customer sign-off</strong><br/>Show the before/after scan — no disputes</div>
-        </div>
-        <div class="uc-panel-item">
-          <div class="uc-panel-dot"></div>
-          <div class="uc-panel-text"><strong>Insurance claims</strong><br/>Documented evidence, automatically generated</div>
-        </div>
-        <div class="uc-panel-item">
-          <div class="uc-panel-dot"></div>
-          <div class="uc-panel-text"><strong>Quality control</strong><br/>Every repair verified against the original scan</div>
-        </div>
-        <div class="uc-panel-item">
-          <div class="uc-panel-dot"></div>
-          <div class="uc-panel-text"><strong>HERO-integrated</strong><br/>Tied directly to the invoice and job record</div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ══ SLIDE 7: 10,000+ USE CASES ══ -->
-  <div class="slide yellow centered" data-index="6">
-    <div class="stat-num">10,000<span class="stat-unit">+</span></div>
-    <div class="stat-label">use cases unlocked by one 3D model —<br/>measurement, quoting, validation, insurance, quality control and beyond.</div>
-  </div>
-
-  <!-- ══ SLIDE 8: FINAL CTA ══ -->
-  <div class="slide dark" data-index="6">
+  <!-- 8 FINAL -->
+  <div class="slide dark">
     <div class="scan-anim">
-      <div class="sa-ring"></div>
-      <div class="sa-ring"></div>
-      <div class="sa-ring"></div>
-      <div class="sa-core">
+      <div class="ring"></div><div class="ring"></div><div class="ring"></div>
+      <div class="core">
         <svg viewBox="0 0 24 24" fill="none" stroke="#FFD600" stroke-width="2" stroke-linecap="round">
           <path d="M9.5 6.5v3h-3v-3h3M11 5H5v6h6V5zm-1.5 9.5v3h-3v-3h3M11 13H5v6h6v-6zm6.5-6.5v3h-3v-3h3M19 5h-6v6h6V5z"/>
         </svg>
       </div>
     </div>
-
-    <div class="final-line">Five people. One hackathon.</div>
-    <div class="final-h">Scan it.<br/><em>Fix it.</em><br/>Validate it.</div>
-    <div class="final-sub">Imagine what happens when HERO ships this to every one of its 10,000+ users tomorrow.</div>
-    <div class="final-btns">
-      <a href="https://frontend-ten-pi-37.vercel.app" target="_blank" class="btn-primary">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" width="17"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+    <div class="label">Five people. One hackathon.</div>
+    <div class="h1">Scan it.<br/><em>Fix it.</em><br/>Validate it.</div>
+    <div class="btns">
+      <a href="https://frontend-ten-pi-37.vercel.app" target="_blank" class="btn-y">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" width="16"><polygon points="5 3 19 12 5 21 5 3"/></svg>
         Open Live Demo
       </a>
-      <a href="https://jkalwa05.github.io/hero-scanner/" target="_blank" class="btn-ghost">
-        View UI Prototype →
-      </a>
+      <a href="https://jkalwa05.github.io/hero-scanner/" target="_blank" class="btn-ghost">UI Prototype →</a>
     </div>
   </div>
 
-</div><!-- /deck -->
+</div>
 
 <!-- Nav -->
-<div class="nav" id="navBar">
+<div class="nav" id="nav">
   <button class="nav-btn" onclick="prev()">←</button>
   <div class="dots" id="dots"></div>
   <div class="ctr" id="ctr">1 / 8</div>
@@ -500,15 +264,14 @@
 </div>
 
 <script>
-  const slides = Array.from(document.querySelectorAll('.slide'));
-  const total  = slides.length;
+  const slides = [...document.querySelectorAll('.slide')];
+  const total = slides.length;
   let cur = 0;
 
-  // Build dots
   const dotsEl = document.getElementById('dots');
-  slides.forEach((_, i) => {
+  slides.forEach((_,i) => {
     const d = document.createElement('div');
-    d.className = 'dot' + (i === 0 ? ' on' : '');
+    d.className = 'dot'+(i===0?' on':'');
     d.onclick = () => goTo(i);
     dotsEl.appendChild(d);
   });
@@ -518,28 +281,30 @@
     slides[cur].classList.remove('active');
     slides[cur].classList.add('out');
     const prev = cur;
-    setTimeout(() => slides[prev].classList.remove('out'), 520);
+    setTimeout(() => slides[prev].classList.remove('out'), 500);
     cur = n;
     slides[cur].classList.add('active');
-    // dots
-    dotsEl.querySelectorAll('.dot').forEach((d,i) => d.classList.toggle('on', i === cur));
-    document.getElementById('ctr').textContent = (cur+1) + ' / ' + total;
-    // logo colour
-    const isLight = slides[cur].classList.contains('yellow') || slides[cur].classList.contains('white');
-    document.getElementById('logoEl').className = 'logo' + (isLight ? ' on-light' : '');
-    // nav contrast on yellow
-    const nav = document.getElementById('navBar');
-    nav.style.background = isLight ? 'rgba(0,0,0,0.08)' : 'rgba(255,255,255,0.06)';
-    nav.style.borderColor = isLight ? 'rgba(0,0,0,0.1)' : 'rgba(255,255,255,0.1)';
-    nav.querySelectorAll('.nav-btn').forEach(b => b.style.color = isLight ? '#1A1A1A' : 'white');
-    nav.querySelectorAll('.nav-btn').forEach(b => b.style.background = isLight ? 'rgba(0,0,0,0.08)' : 'rgba(255,255,255,0.08)');
-    document.getElementById('ctr').style.color = isLight ? 'rgba(26,26,26,0.35)' : 'rgba(255,255,255,0.3)';
+
+    dotsEl.querySelectorAll('.dot').forEach((d,i) => d.classList.toggle('on', i===cur));
+    document.getElementById('ctr').textContent = (cur+1)+' / '+total;
+
+    const isYellow = slides[cur].classList.contains('yellow');
+    const logo = document.getElementById('logo');
+    logo.className = 'logo'+(isYellow?' light':'');
+
+    const nav = document.getElementById('nav');
+    nav.style.background = isYellow ? 'rgba(0,0,0,0.08)' : 'rgba(255,255,255,0.06)';
+    nav.style.borderColor = isYellow ? 'rgba(0,0,0,0.1)' : 'rgba(255,255,255,0.1)';
+    nav.querySelectorAll('.nav-btn').forEach(b => {
+      b.style.color = isYellow ? '#1A1A1A' : 'white';
+      b.style.background = isYellow ? 'rgba(0,0,0,0.08)' : 'rgba(255,255,255,0.08)';
+    });
+    document.getElementById('ctr').style.color = isYellow ? 'rgba(26,26,26,0.3)' : 'rgba(255,255,255,0.28)';
     dotsEl.querySelectorAll('.dot').forEach(d => {
       d.style.background = d.classList.contains('on')
-        ? (isLight ? '#1A1A1A' : '#FFD600')
-        : (isLight ? 'rgba(0,0,0,0.15)' : 'rgba(255,255,255,0.2)');
-      if (d.classList.contains('on')) d.style.width = '20px';
-      else d.style.width = '6px';
+        ? (isYellow ? '#1A1A1A' : '#FFD600')
+        : (isYellow ? 'rgba(0,0,0,0.18)' : 'rgba(255,255,255,0.2)');
+      d.style.width = d.classList.contains('on') ? '20px' : '6px';
     });
   }
 
@@ -547,16 +312,13 @@
   function prev() { if (cur > 0) goTo(cur-1); }
 
   document.addEventListener('keydown', e => {
-    if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); next(); }
-    if (e.key === 'ArrowLeft') prev();
+    if (e.key==='ArrowRight'||e.key===' ') { e.preventDefault(); next(); }
+    if (e.key==='ArrowLeft') prev();
   });
 
   let tx = 0;
-  document.addEventListener('touchstart', e => tx = e.touches[0].clientX, {passive:true});
-  document.addEventListener('touchend', e => {
-    const dx = tx - e.changedTouches[0].clientX;
-    if (Math.abs(dx) > 50) dx > 0 ? next() : prev();
-  });
+  document.addEventListener('touchstart', e => tx=e.touches[0].clientX, {passive:true});
+  document.addEventListener('touchend', e => { const dx=tx-e.changedTouches[0].clientX; if(Math.abs(dx)>50) dx>0?next():prev(); });
 </script>
 </body>
 </html>
