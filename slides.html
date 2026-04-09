@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HERO Scanner – Pitch</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --yellow: #FFD600;
+      --black: #1A1A1A;
+      --white: #FFFFFF;
+      --gray: #4A4A4A;
+      --gray-light: #F5F5F5;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: "DM Sans", sans-serif;
+      background: var(--black);
+      width: 100vw; height: 100vh;
+      overflow: hidden;
+    }
+
+    /* ── SLIDES ── */
+    .deck { width: 100%; height: 100%; position: relative; }
+
+    .slide {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 60px 80px;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateX(60px);
+      transition: opacity 0.45s ease, transform 0.45s ease;
+    }
+    .slide.active {
+      opacity: 1;
+      pointer-events: all;
+      transform: translateX(0);
+    }
+    .slide.out {
+      opacity: 0;
+      transform: translateX(-60px);
+    }
+
+    /* ── BACKGROUNDS ── */
+    .bg-dark  { background: var(--black); }
+    .bg-yellow{ background: var(--yellow); }
+    .bg-white { background: var(--white); }
+    .bg-split { background: linear-gradient(135deg, var(--black) 55%, var(--yellow) 55%); }
+
+    /* ── NAV ── */
+    .nav-bar {
+      position: fixed;
+      bottom: 32px; left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: rgba(255,255,255,0.07);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 50px;
+      padding: 10px 20px;
+      z-index: 100;
+    }
+    .nav-btn {
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      border: none;
+      background: rgba(255,255,255,0.1);
+      color: white;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.2s;
+      font-size: 16px;
+    }
+    .nav-btn:hover { background: var(--yellow); color: var(--black); }
+    .slide-counter {
+      font-size: 13px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.5);
+      min-width: 44px;
+      text-align: center;
+    }
+    .nav-dot-wrap { display: flex; gap: 6px; align-items: center; }
+    .nav-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.2);
+      transition: all 0.2s;
+      cursor: pointer;
+    }
+    .nav-dot.active { background: var(--yellow); width: 18px; border-radius: 3px; }
+
+    /* ── LOGO ── */
+    .slide-logo {
+      position: fixed;
+      top: 28px; left: 40px;
+      font-size: 18px;
+      font-weight: 800;
+      color: rgba(255,255,255,0.25);
+      letter-spacing: -0.5px;
+      z-index: 100;
+    }
+    .slide-logo span { color: var(--yellow); opacity: 0.5; }
+
+    /* ── SLIDE 1: TITLE ── */
+    .s1-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255,214,0,0.1);
+      border: 1px solid rgba(255,214,0,0.25);
+      color: var(--yellow);
+      font-size: 13px;
+      font-weight: 700;
+      padding: 8px 18px;
+      border-radius: 50px;
+      margin-bottom: 28px;
+      letter-spacing: 0.05em;
+    }
+    .s1-dot { width: 7px; height: 7px; background: var(--yellow); border-radius: 50%; animation: blink 2s infinite; }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.2} }
+    .s1-title {
+      font-size: clamp(52px, 7vw, 88px);
+      font-weight: 800;
+      color: var(--white);
+      line-height: 1.05;
+      text-align: center;
+      margin-bottom: 24px;
+    }
+    .s1-title span { color: var(--yellow); }
+    .s1-sub {
+      font-size: clamp(16px, 2vw, 20px);
+      color: rgba(255,255,255,0.5);
+      text-align: center;
+      max-width: 560px;
+      line-height: 1.65;
+      margin-bottom: 48px;
+    }
+    .s1-tags { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
+    .tag {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.1);
+      color: rgba(255,255,255,0.55);
+      font-size: 13px;
+      font-weight: 600;
+      padding: 8px 18px;
+      border-radius: 50px;
+    }
+    .s1-deco {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      pointer-events: none;
+    }
+
+    /* ── SLIDE 2: PROBLEM ── */
+    .problem-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 20px;
+      width: 100%;
+      max-width: 900px;
+      margin-top: 40px;
+    }
+    .problem-card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 20px;
+      padding: 28px 24px;
+    }
+    .problem-card-icon {
+      width: 48px; height: 48px;
+      background: rgba(239,68,68,0.1);
+      border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 16px;
+    }
+    .problem-card-icon svg { width: 24px; height: 24px; }
+    .problem-card h3 { font-size: 18px; font-weight: 700; color: white; margin-bottom: 8px; }
+    .problem-card p { font-size: 14px; color: rgba(255,255,255,0.45); line-height: 1.6; }
+    .problem-stat {
+      font-size: 42px;
+      font-weight: 800;
+      color: #EF4444;
+      margin-bottom: 4px;
+    }
+
+    /* ── SLIDE 3: SOLUTION / DEMO ── */
+    .solution-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      width: 100%;
+      max-width: 960px;
+      align-items: center;
+    }
+    .solution-text h2 {
+      font-size: clamp(32px, 4vw, 52px);
+      font-weight: 800;
+      color: var(--black);
+      line-height: 1.1;
+      margin-bottom: 16px;
+    }
+    .solution-text h2 span { color: rgba(26,26,26,0.4); }
+    .solution-text p {
+      font-size: 16px;
+      color: rgba(26,26,26,0.6);
+      line-height: 1.7;
+      margin-bottom: 32px;
+    }
+    .demo-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--black);
+      color: var(--yellow);
+      border: none;
+      border-radius: 50px;
+      padding: 16px 32px;
+      font-family: "DM Sans", sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.2s;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+    }
+    .demo-btn:hover { transform: translateY(-2px); box-shadow: 0 12px 32px rgba(0,0,0,0.25); }
+    .demo-btn svg { width: 18px; height: 18px; }
+    .phone-mock {
+      width: 220px;
+      background: var(--black);
+      border-radius: 32px;
+      overflow: hidden;
+      box-shadow: 0 32px 80px rgba(0,0,0,0.25), 0 0 0 8px rgba(0,0,0,0.1);
+      margin: 0 auto;
+      aspect-ratio: 9/19;
+      display: flex; flex-direction: column;
+    }
+    .phone-mock-top {
+      background: var(--black);
+      padding: 12px 0 0;
+      display: flex; justify-content: center;
+    }
+    .phone-notch {
+      width: 80px; height: 22px;
+      background: #000;
+      border-radius: 11px;
+    }
+    .phone-mock-screen {
+      flex: 1;
+      background: linear-gradient(180deg, #111 0%, #1a1a1a 100%);
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      position: relative;
+      padding: 16px;
+      gap: 12px;
+    }
+    .phone-scan-frame {
+      width: 120px; height: 120px;
+      position: relative;
+    }
+    .phone-scan-frame::before,.phone-scan-frame::after,
+    .phone-scan-inner::before,.phone-scan-inner::after {
+      content:'';
+      position:absolute;
+      width:16px; height:16px;
+      border-color:var(--yellow);
+      border-style:solid;
+    }
+    .phone-scan-frame::before{top:0;left:0;border-width:2px 0 0 2px}
+    .phone-scan-frame::after{top:0;right:0;border-width:2px 2px 0 0}
+    .phone-scan-inner::before{bottom:0;left:0;border-width:0 0 2px 2px}
+    .phone-scan-inner::after{bottom:0;right:0;border-width:0 2px 2px 0}
+    .phone-scan-line {
+      position:absolute;left:2px;right:2px;height:1px;
+      background:linear-gradient(90deg,transparent,var(--yellow),transparent);
+      animation:scanLine 2s ease-in-out infinite;
+    }
+    @keyframes scanLine{0%{top:4px;opacity:0}10%{opacity:1}90%{opacity:1}100%{top:116px;opacity:0}}
+    .phone-label {
+      font-size: 9px; font-weight: 700;
+      color: rgba(255,255,255,0.5);
+      letter-spacing: .05em; text-transform: uppercase;
+    }
+
+    /* ── SLIDE 4: HOW IT WORKS ── */
+    .steps-row {
+      display: flex;
+      gap: 0;
+      width: 100%;
+      max-width: 860px;
+      margin-top: 40px;
+      position: relative;
+    }
+    .steps-row::before {
+      content: '';
+      position: absolute;
+      top: 36px; left: calc(16% + 36px); right: calc(16% + 36px);
+      height: 2px;
+      background: rgba(255,255,255,0.08);
+    }
+    .step-item {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      text-align: center;
+    }
+    .step-circle {
+      width: 72px; height: 72px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 28px;
+      font-weight: 800;
+      position: relative;
+      z-index: 1;
+    }
+    .step-circle.yellow { background: var(--yellow); color: var(--black); }
+    .step-circle.dark { background: rgba(255,255,255,0.07); border: 2px solid rgba(255,255,255,0.1); color: white; }
+    .step-circle svg { width: 32px; height: 32px; }
+    .step-title { font-size: 17px; font-weight: 700; color: white; }
+    .step-desc { font-size: 13px; color: rgba(255,255,255,0.45); line-height: 1.55; max-width: 180px; }
+
+    /* ── SLIDE 5: FEATURES ── */
+    .feat-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 16px;
+      width: 100%;
+      max-width: 860px;
+      margin-top: 36px;
+    }
+    .feat-card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 18px;
+      padding: 24px 20px;
+      transition: all 0.2s;
+    }
+    .feat-card:hover { background: rgba(255,214,0,0.07); border-color: rgba(255,214,0,0.2); }
+    .feat-icon {
+      width: 44px; height: 44px;
+      background: var(--yellow);
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 14px;
+    }
+    .feat-icon svg { width: 22px; height: 22px; }
+    .feat-title { font-size: 16px; font-weight: 700; color: white; margin-bottom: 6px; }
+    .feat-desc { font-size: 13px; color: rgba(255,255,255,0.4); line-height: 1.55; }
+
+    /* ── SLIDE 6: TEAM / CTA ── */
+    .cta-title {
+      font-size: clamp(44px, 6vw, 76px);
+      font-weight: 800;
+      color: var(--black);
+      line-height: 1.05;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .cta-sub {
+      font-size: 18px;
+      color: rgba(26,26,26,0.55);
+      text-align: center;
+      margin-bottom: 40px;
+    }
+    .cta-btns { display: flex; gap: 14px; }
+    .cta-btn-primary {
+      display: inline-flex; align-items: center; gap: 10px;
+      background: var(--black); color: var(--yellow);
+      border: none; border-radius: 50px;
+      padding: 18px 36px;
+      font-family: "DM Sans",sans-serif;
+      font-size: 17px; font-weight: 700;
+      cursor: pointer; text-decoration: none;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+      transition: all 0.2s;
+    }
+    .cta-btn-primary:hover { transform: translateY(-2px); }
+    .cta-btn-secondary {
+      display: inline-flex; align-items: center; gap: 10px;
+      background: rgba(0,0,0,0.08); color: var(--black);
+      border: 2px solid rgba(0,0,0,0.15); border-radius: 50px;
+      padding: 18px 36px;
+      font-family: "DM Sans",sans-serif;
+      font-size: 17px; font-weight: 700;
+      cursor: pointer; text-decoration: none;
+      transition: all 0.2s;
+    }
+    .cta-bg-deco {
+      position: absolute;
+      width: 500px; height: 500px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.4);
+      filter: blur(100px);
+      pointer-events: none;
+    }
+
+    /* ── SHARED TYPOGRAPHY ── */
+    .slide-eyebrow {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--yellow);
+      margin-bottom: 14px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .slide-eyebrow::before {
+      content:'';
+      width: 24px; height: 3px;
+      background: var(--yellow);
+      border-radius: 2px;
+    }
+    .slide-eyebrow.dark { color: rgba(26,26,26,0.45); }
+    .slide-eyebrow.dark::before { background: rgba(26,26,26,0.3); }
+    .slide-h2 {
+      font-size: clamp(32px, 4vw, 52px);
+      font-weight: 800;
+      color: var(--white);
+      line-height: 1.1;
+      margin-bottom: 14px;
+      text-align: center;
+    }
+    .slide-h2.dark { color: var(--black); }
+    .slide-p {
+      font-size: 17px;
+      color: rgba(255,255,255,0.5);
+      text-align: center;
+      max-width: 580px;
+      line-height: 1.65;
+    }
+
+    /* keyboard hint */
+    .kbd-hint {
+      position: fixed;
+      top: 28px; right: 40px;
+      font-size: 11px;
+      color: rgba(255,255,255,0.2);
+      font-weight: 500;
+      z-index: 100;
+    }
+  </style>
+</head>
+<body>
+
+<div class="slide-logo">HERO<span>.</span></div>
+<div class="kbd-hint">← → or click to navigate</div>
+
+<div class="deck">
+
+  <!-- ══════════════════════════════════════
+       SLIDE 1 — TITLE
+  ══════════════════════════════════════ -->
+  <div class="slide bg-dark active" data-index="0">
+    <!-- Deco blobs -->
+    <div class="s1-deco" style="width:400px;height:400px;background:rgba(255,214,0,0.07);top:-100px;right:-100px;"></div>
+    <div class="s1-deco" style="width:300px;height:300px;background:rgba(255,214,0,0.05);bottom:-80px;left:-80px;"></div>
+
+    <div class="s1-eyebrow">
+      <span class="s1-dot"></span>
+      AI Hackathon 2026 · HERO Software
+    </div>
+    <div class="s1-title">HERO <span>Scanner</span></div>
+    <div class="s1-sub">Scan components on construction sites — get materials, dimensions and costs in seconds. Powered by AI.</div>
+    <div class="s1-tags">
+      <span class="tag">🏗️ Construction Tech</span>
+      <span class="tag">🤖 AI-powered</span>
+      <span class="tag">📱 Mobile-first</span>
+      <span class="tag">⚡ Real-time</span>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       SLIDE 2 — PROBLEM
+  ══════════════════════════════════════ -->
+  <div class="slide bg-dark" data-index="1">
+    <div class="slide-eyebrow">The Problem</div>
+    <div class="slide-h2">Construction sites<br/>are still analogue</div>
+    <div class="slide-p" style="margin-bottom:0">Workers spend hours on manual measuring, material lists and cost estimation — time that costs money.</div>
+
+    <div class="problem-grid">
+      <div class="problem-card">
+        <div class="problem-stat">3h+</div>
+        <h3>Lost per project</h3>
+        <p>Manual measuring and material calculation on average per site visit</p>
+      </div>
+      <div class="problem-card">
+        <div class="problem-stat">23%</div>
+        <h3>Material waste</h3>
+        <p>Wrong estimates lead to over-ordering, delays and unnecessary costs</p>
+      </div>
+      <div class="problem-card">
+        <div class="problem-stat">67%</div>
+        <h3>Still use paper</h3>
+        <p>Of construction companies still rely on paper-based documentation in the field</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       SLIDE 3 — SOLUTION + LIVE DEMO LINK
+  ══════════════════════════════════════ -->
+  <div class="slide bg-yellow" data-index="2">
+    <div class="solution-layout">
+      <div class="solution-text">
+        <div class="slide-eyebrow dark">Our Solution</div>
+        <h2>Point. Scan.<br/><span>Done.</span></h2>
+        <p>HERO Scanner uses your phone camera to analyse any building component on-site. Upload a short video or scan live — AI returns materials, dimensions and costs instantly.</p>
+        <a href="https://frontend-ten-pi-37.vercel.app" target="_blank" class="demo-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#FFD600" stroke-width="2.5" stroke-linecap="round">
+            <polygon points="5 3 19 12 5 21 5 3"/>
+          </svg>
+          View Live Demo
+        </a>
+      </div>
+      <div style="display:flex;justify-content:center;">
+        <div class="phone-mock">
+          <div class="phone-mock-top"><div class="phone-notch"></div></div>
+          <div class="phone-mock-screen">
+            <div class="phone-label">● LIVE SCAN</div>
+            <div class="phone-scan-frame">
+              <div class="phone-scan-inner"></div>
+              <div class="phone-scan-line"></div>
+            </div>
+            <div class="phone-label" style="color:var(--yellow);margin-top:4px;">2 of 4 sides captured</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       SLIDE 4 — HOW IT WORKS
+  ══════════════════════════════════════ -->
+  <div class="slide bg-dark" data-index="3">
+    <div class="slide-eyebrow">How it works</div>
+    <div class="slide-h2">Three steps to the result</div>
+
+    <div class="steps-row">
+      <div class="step-item">
+        <div class="step-circle yellow">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#1A1A1A" stroke-width="2.5" stroke-linecap="round">
+            <path d="M9.5 6.5v3h-3v-3h3M11 5H5v6h6V5zm-1.5 9.5v3h-3v-3h3M11 13H5v6h6v-6zm6.5-6.5v3h-3v-3h3M19 5h-6v6h6V5z"/>
+          </svg>
+        </div>
+        <div class="step-title">Scan or Upload</div>
+        <div class="step-desc">Scan live with your camera or upload a short video of the component</div>
+      </div>
+      <div class="step-item">
+        <div class="step-circle dark">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#FFD600" stroke-width="2" stroke-linecap="round">
+            <polygon points="12 2 2 7 12 12 22 7 12 2"/>
+            <polyline points="2 17 12 22 22 17"/>
+            <polyline points="2 12 12 17 22 12"/>
+          </svg>
+        </div>
+        <div class="step-title">AI Analysis</div>
+        <div class="step-desc">3D reconstruction, material detection and cost calculation in real-time</div>
+      </div>
+      <div class="step-item">
+        <div class="step-circle dark">
+          <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round">
+            <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/>
+            <polyline points="14 2 14 8 20 8"/>
+            <line x1="16" y1="13" x2="8" y2="13"/>
+            <line x1="16" y1="17" x2="8" y2="17"/>
+          </svg>
+        </div>
+        <div class="step-title">Full Report</div>
+        <div class="step-desc">Materials list, costs breakdown, dimensions and 3D model — ready to order</div>
+      </div>
+    </div>
+
+    <!-- Bonus: customer link feature -->
+    <div style="margin-top:48px;background:rgba(255,214,0,0.07);border:1px solid rgba(255,214,0,0.15);border-radius:16px;padding:18px 28px;display:flex;align-items:center;gap:16px;max-width:600px;">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#FFD600" stroke-width="2" stroke-linecap="round" width="22" style="flex-shrink:0">
+        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+        <polyline points="22,6 12,13 2,6"/>
+      </svg>
+      <div style="font-size:14px;color:rgba(255,255,255,0.6);line-height:1.55;">
+        <strong style="color:var(--yellow);">Customer Upload Link</strong> — Send a personalised link to any customer. They upload their video, you get the result.
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       SLIDE 5 — FEATURES
+  ══════════════════════════════════════ -->
+  <div class="slide bg-dark" data-index="4">
+    <div class="slide-eyebrow">Features</div>
+    <div class="slide-h2">Everything you need on-site</div>
+
+    <div class="feat-grid">
+      <div class="feat-card">
+        <div class="feat-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#1A1A1A" stroke-width="2.5" stroke-linecap="round">
+            <path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/>
+          </svg>
+        </div>
+        <div class="feat-title">Material Detection</div>
+        <div class="feat-desc">AI identifies required materials and quantities automatically from the scan</div>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#1A1A1A" stroke-width="2.5" stroke-linecap="round">
+            <line x1="12" y1="1" x2="12" y2="23"/>
+            <path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/>
+          </svg>
+        </div>
+        <div class="feat-title">Cost Estimation</div>
+        <div class="feat-desc">Real-time market prices for instant, accurate cost breakdowns</div>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#1A1A1A" stroke-width="2.5" stroke-linecap="round">
+            <path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/>
+            <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
+            <line x1="12" y1="22.08" x2="12" y2="12"/>
+          </svg>
+        </div>
+        <div class="feat-title">3D Model View</div>
+        <div class="feat-desc">Full 3D reconstruction from multiple scan angles for precise analysis</div>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#1A1A1A" stroke-width="2.5" stroke-linecap="round">
+            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/>
+          </svg>
+        </div>
+        <div class="feat-title">Dimensions</div>
+        <div class="feat-desc">Precise measurements with ±1.2mm accuracy — no tape measure needed</div>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#1A1A1A" stroke-width="2.5" stroke-linecap="round">
+            <polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/>
+          </svg>
+        </div>
+        <div class="feat-title">Video Upload</div>
+        <div class="feat-desc">Can't scan live? Upload any video — same results, same speed</div>
+      </div>
+      <div class="feat-card">
+        <div class="feat-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#1A1A1A" stroke-width="2.5" stroke-linecap="round">
+            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+            <polyline points="22,6 12,13 2,6"/>
+          </svg>
+        </div>
+        <div class="feat-title">Customer Link</div>
+        <div class="feat-desc">Send a personalised upload link to customers — fully self-service</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       SLIDE 6 — CTA
+  ══════════════════════════════════════ -->
+  <div class="slide bg-yellow" data-index="5">
+    <div class="cta-bg-deco" style="top:-100px;right:-100px;"></div>
+    <div class="cta-bg-deco" style="bottom:-100px;left:-100px;opacity:.6;"></div>
+
+    <div class="slide-eyebrow dark">Let's go</div>
+    <div class="cta-title">Try it yourself.</div>
+    <div class="cta-sub">Scan a component, upload a video or send a link to a customer — right now.</div>
+    <div class="cta-btns">
+      <a href="https://frontend-ten-pi-37.vercel.app" target="_blank" class="cta-btn-primary">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#FFD600" stroke-width="2.5" stroke-linecap="round" width="18">
+          <polygon points="5 3 19 12 5 21 5 3"/>
+        </svg>
+        Open Live Demo
+      </a>
+      <a href="https://jkalwa05.github.io/hero-scanner/" target="_blank" class="cta-btn-secondary">
+        View Prototype
+      </a>
+    </div>
+
+    <div style="position:absolute;bottom:90px;font-size:13px;color:rgba(26,26,26,0.35);font-weight:600;">
+      HERO Software · AI Hackathon 2026
+    </div>
+  </div>
+
+</div><!-- /deck -->
+
+<!-- Nav Bar -->
+<div class="nav-bar">
+  <button class="nav-btn" onclick="prev()">←</button>
+  <div class="nav-dot-wrap" id="dots"></div>
+  <div class="slide-counter" id="counter">1 / 6</div>
+  <button class="nav-btn" onclick="next()">→</button>
+</div>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  let current = 0;
+
+  // Build dots
+  const dotsWrap = document.getElementById('dots');
+  slides.forEach((_, i) => {
+    const d = document.createElement('div');
+    d.className = 'nav-dot' + (i === 0 ? ' active' : '');
+    d.onclick = () => goTo(i);
+    dotsWrap.appendChild(d);
+  });
+
+  function goTo(n) {
+    slides[current].classList.remove('active');
+    slides[current].classList.add('out');
+    setTimeout(() => slides[current < n ? current : n + 1]?.classList.remove('out'), 450);
+    // clean up all out
+    setTimeout(() => slides.forEach(s => s.classList.remove('out')), 500);
+
+    slides[current].classList.remove('active');
+    current = n;
+    slides[current].classList.add('active');
+
+    // update dots
+    document.querySelectorAll('.nav-dot').forEach((d, i) => {
+      d.classList.toggle('active', i === current);
+    });
+    document.getElementById('counter').textContent = (current + 1) + ' / ' + slides.length;
+  }
+
+  function next() { if (current < slides.length - 1) goTo(current + 1); }
+  function prev() { if (current > 0) goTo(current - 1); }
+
+  // Keyboard
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === ' ') next();
+    if (e.key === 'ArrowLeft') prev();
+  });
+
+  // Touch/swipe
+  let tx = 0;
+  document.addEventListener('touchstart', e => tx = e.touches[0].clientX);
+  document.addEventListener('touchend', e => {
+    const dx = tx - e.changedTouches[0].clientX;
+    if (Math.abs(dx) > 50) dx > 0 ? next() : prev();
+  });
+</script>
+</body>
+</html>
