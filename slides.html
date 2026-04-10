@@ -207,11 +207,32 @@
     <div class="h1 dark-text">Your expertise.<br/><em style="color:rgba(26,26,26,0.35)">Built into</em><br/>every scan.</div>
   </div>
 
-  <!-- 7 10,000+ -->
-  <div class="slide dark center">
-    <div style="font-size:38vw;font-weight:400;color:var(--y);line-height:0.85;font-family:'DM Sans',sans-serif;margin-bottom:-40px;">∞</div>
-    <div class="stat-desc" style="color:rgba(255,255,255,0.5);position:relative;z-index:1;">use cases unlocked by one 3D model.<br/>This is just the beginning.</div>
+  <!-- 7 INFINITE USE CASES -->
+  <div class="slide dark center" style="overflow:hidden;">
+    <!-- Tag cloud background -->
+    <div id="tagcloud" style="position:absolute;inset:-40px;display:flex;flex-wrap:wrap;align-content:flex-start;gap:12px;padding:40px;opacity:0.18;pointer-events:none;"></div>
+    <!-- Fade edges -->
+    <div style="position:absolute;inset:0;background:radial-gradient(ellipse at center,transparent 30%,#1A1A1A 75%);pointer-events:none;"></div>
+    <!-- Center content -->
+    <div style="position:relative;z-index:2;text-align:center;">
+      <div style="font-size:clamp(52px,7vw,100px);font-weight:800;color:var(--w);line-height:1.05;">One scan.</div>
+      <div style="font-size:clamp(52px,7vw,100px);font-weight:800;color:var(--y);line-height:1.05;">Every answer.</div>
+    </div>
   </div>
+
+  <script>
+    // Fill tag cloud
+    const tags = ["Measurement","Quoting","Insurance","Validation","Material Detection","Cost Estimation","Quality Control","Customer Sign-off","3D Model","Inventory","Before & After","Documentation","Remote Diagnosis","On-site Analysis","Damage Report","Invoice","Logistics","Project Planning","Defect Tracking","Compliance","Safety Check","Site Survey","Renovation","Repair Estimate","Handover Protocol","Digital Twin","Asset Management","Progress Tracking","Dispute Resolution","Supplier Order"];
+    const cloud = document.getElementById('tagcloud');
+    // repeat to fill screen
+    const repeated = [...tags,...tags,...tags];
+    repeated.forEach(t => {
+      const el = document.createElement('div');
+      el.style.cssText = 'background:rgba(255,214,0,0.12);border:1px solid rgba(255,214,0,0.2);color:#FFD600;font-size:13px;font-weight:600;padding:8px 16px;border-radius:50px;white-space:nowrap;';
+      el.textContent = t;
+      cloud.appendChild(el);
+    });
+  </script>
 
   <!-- 8 FINAL -->
   <div class="slide yellow center">
