@@ -209,29 +209,12 @@
 
   <!-- 7 INFINITY -->
   <div class="slide dark center" style="overflow:hidden;">
-    <!-- Tag cloud -->
-    <div id="tagcloud" style="position:absolute;inset:-40px;display:flex;flex-wrap:wrap;align-content:flex-start;gap:10px;padding:40px;pointer-events:none;"></div>
-    <!-- Infinity watermark -->
-    <div style="position:absolute;font-size:80vw;font-weight:400;color:var(--y);opacity:0.13;line-height:1;font-family:'DM Sans',sans-serif;transform:scaleX(1.15);pointer-events:none;user-select:none;">∞</div>
-    <!-- Fade edges -->
-    <div style="position:absolute;inset:0;background:radial-gradient(ellipse at center,transparent 20%,rgba(26,26,26,0.85) 70%);pointer-events:none;"></div>
-    <!-- Foreground -->
+    <div style="position:absolute;font-size:80vw;font-weight:400;color:var(--y);opacity:0.1;line-height:1;font-family:'DM Sans',sans-serif;transform:scaleX(1.15);pointer-events:none;user-select:none;">∞</div>
     <div style="position:relative;z-index:2;text-align:center;">
       <div style="font-size:clamp(52px,7vw,96px);font-weight:800;color:var(--w);line-height:1.05;">One scan.</div>
       <div style="font-size:clamp(52px,7vw,96px);font-weight:800;color:var(--y);line-height:1.05;">Unlimited use cases.</div>
     </div>
   </div>
-
-  <script>
-    const tags = ["Measurement","Quoting","Insurance","Validation","Material Detection","Cost Estimation","Quality Control","Customer Sign-off","3D Model","Inventory","Before & After","Documentation","Remote Diagnosis","On-site Analysis","Damage Report","Invoice","Logistics","Project Planning","Defect Tracking","Compliance","Safety Check","Site Survey","Renovation","Repair Estimate","Handover Protocol","Digital Twin","Asset Management","Progress Tracking","Dispute Resolution","Supplier Order"];
-    const cloud = document.getElementById('tagcloud');
-    [...tags,...tags,...tags,...tags].forEach(t => {
-      const el = document.createElement('div');
-      el.style.cssText = 'background:rgba(255,214,0,0.08);border:1px solid rgba(255,214,0,0.15);color:rgba(255,214,0,0.5);font-size:13px;font-weight:600;padding:7px 15px;border-radius:50px;white-space:nowrap;flex-shrink:0;';
-      el.textContent = t;
-      cloud.appendChild(el);
-    });
-  </script>
 
   <!-- 8 FINAL -->
   <div class="slide yellow center">
