@@ -208,9 +208,14 @@
   </div>
 
   <!-- 7 INFINITY -->
-  <div class="slide dark center">
-    <div style="font-size:38vw;font-weight:400;color:var(--y);line-height:0.85;font-family:'DM Sans',sans-serif;transform:scaleX(1.5);display:block;margin-bottom:-40px;">∞</div>
-    <div class="stat-desc" style="color:rgba(255,255,255,0.5);position:relative;z-index:1;">use cases unlocked by one 3D model.<br/>This is just the beginning.</div>
+  <div class="slide dark center" style="overflow:hidden;">
+    <!-- Watermark -->
+    <div style="position:absolute;font-size:80vw;font-weight:400;color:var(--y);opacity:0.07;line-height:1;font-family:'DM Sans',sans-serif;transform:scaleX(1.15);pointer-events:none;user-select:none;">∞</div>
+    <!-- Foreground text -->
+    <div style="position:relative;z-index:2;text-align:center;">
+      <div style="font-size:clamp(52px,7vw,96px);font-weight:800;color:var(--w);line-height:1.05;">One scan.</div>
+      <div style="font-size:clamp(52px,7vw,96px);font-weight:800;color:var(--y);line-height:1.05;">Unlimited use cases.</div>
+    </div>
   </div>
 
   <!-- 8 FINAL -->
